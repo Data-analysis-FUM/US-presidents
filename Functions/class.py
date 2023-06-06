@@ -5,10 +5,13 @@ class presidents:
         data.name = data.df[1]
         data.height = data.df[2]
         
+        
+        
     def header(data):
         return(data.df.head())
     
-    def Uper180(data):#It counts the number of presidents whose height was more than 180 cm
+    
+    def less180(data):#It counts the number of presidents whose height was more than 180 cm
         counter = 0
         h = data.height
         i = 0
@@ -82,13 +85,15 @@ class presidents:
     
     
     def douplicated_height(data):
-        ordinal = data.ordinal
-        name_list = data.name
-        height_list = data.height
         
-        height_list = height_list.tolist()
+        groups = data.df.groupby(2)
         
-        return [list(group) for key, group in groupby(height_list)]
+        for height, group in groups:
+            douplicate = []
+            if len(group) > 1:
+                names = ", ".join(group[1].tolist())
+                print(f"   Presidents with height {height} cm: {names}")      
+        
     
     def plot(data):
         ordinal = data.ordinal
@@ -116,4 +121,45 @@ class presidents:
         plt.ylim([min(height_list)-1, max(height_list)+1])
         
         plt.show()
+        
+        
+    def monitoring(data):
+        print("1)How many American presidents were less than 180 cm tall?")
+        print("   ", data.less180(), " presidents were less than 180 cm.", sep="")
+        
+        print("2)How tall was Roosevelt?")
+        rosvelts = data.find_Roosevelt()
+        for counter in rosvelts:
+            print("   ", rosvelts[rosvelts.index(counter)][1], " was: ", rosvelts[rosvelts.index(counter)][2], "cm", sep="")
+        
+        
+        print("3)Who was the tallest American president?")
+        mx = data.maximum_height()
+        print("   Maximum height between American presidents is: ", mx[0], "cm", sep="")
+        print("   Tallest presidens:")
+        for counter in mx:
+            if mx.index(counter) != 0:
+                print("      ", mx[mx.index(counter)][1], sep="")
+                
+        
+        print("4)The tallest president(s) of America, how many president(s) of the United States?")
+        mx = data.maximum_height()
+        for counter in mx:
+            if mx.index(counter) != 0:
+                print("   ", mx[mx.index(counter)][1], " was ", mx[mx.index(counter)][0], "th president of US.", sep="")
+                
+        print("5)Which presidents have been taller than Obama?")
+        to = data.taller_than_Obama()
+        for counter in to:
+            print("   ", to[to.index(counter)][1], " was: ", to[to.index(counter)][2]-185, "cm taller than Barack Obama!", sep="")
+        
+        
+        print("6)Which presidents have had the same height?")
+        data.douplicated_height()
+        
+        
+        print("7)Display a bar graph of their height. The vertical axis of the president's name and the length of the bar should indicate his height. The order of the vertical axis should be the same as the original order of the data.")
+        data.plot()
+        
+        
         
